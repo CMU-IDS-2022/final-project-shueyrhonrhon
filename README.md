@@ -4,7 +4,7 @@
 * **Team members**:
   * Contact person: jiaxianw@andrew.cmu.edu
   * zhiyili@andrew.cmu.edu
-  * TODO@andrew.cmu.edu
+  * yiningw4@andrew.cmu.edu
   * TODO@andrew.cmu.edu
 
 ## Work distribution
