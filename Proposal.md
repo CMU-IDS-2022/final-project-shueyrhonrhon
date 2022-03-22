@@ -1,6 +1,6 @@
 # Final Project Proposal
 
-**GitHub Repo URL**: TODO
+**GitHub Repo URL**: https://github.com/CMU-IDS-2022/final-project-shueyrhonrhon
 
 **Data Scientist Career Accelerator**
 
