@@ -4,7 +4,7 @@
 
 **Data Scientist Career Accelerator**
 
-Team Member : Zhiyi Li, Yining(Nora) Wang, Jiaxiang Wu
+Team Member : Zhiyi Li, Yining(Nora) Wang, Jiaxiang Wu, Ge Huang
 
 **Project Goal**
 
