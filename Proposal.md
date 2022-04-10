@@ -29,4 +29,5 @@ The dataset contains the skill set requirements for each job posting. The skills
 
 **Sketches and Data Analysis**
 1. Data Processing
-2. System Design
+2. System Design:
+  1. (sketch_map.png)
