@@ -26,3 +26,7 @@ We want to analyze our data in different dimensions. For example, the distributi
 **Relationship between Salary and Skills, and model predictions**
 
 The dataset contains the skill set requirements for each job posting. The skills include Python, Spark, aws, excel, sql, sas, keras, pythorch, scikit, tensor, hadoop, tableau, bi, flink mongo and google_an. With those data, we can give an overview of what are the most popular and high demanding skills that a Data Scientist is expected to acquire. Furthermore, we can build machine learning predictive models to predict the expected salary range by letting users enter their current skill sets. Furthermore, for people who want to gain more knowledge to land a job with higher salary, we will build models that show the impact of each skill on salary growth. Thus, applicants will not waste their time learning skills that have little impact on their salary.
+
+**Sketches and Data Analysis**
+1. Data Processing
+2. System Design
