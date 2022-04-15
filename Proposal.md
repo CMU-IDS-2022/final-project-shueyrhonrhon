@@ -33,9 +33,8 @@ The data are well cleaned and processed. We have 42 parameters in total and each
 **The distribution of average salary of data scientists
 (x axis is average salary, y axis is count)**
 ![](/images/national_avg_salary.png)
-**The average salary across the US**
+**The average salary across the US**(The redder the greater the value)
 
-The redder the greater the value
 ![a map](/images/nation_salary_map.png)
 
 \
