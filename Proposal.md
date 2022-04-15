@@ -46,6 +46,8 @@ In order to build a machine learning model, we need to preprocessing the y-label
 \
 First, we train a machine learning model using our dataset to determine the importance of each skill for landing a high salary job. As shown in the picture below:
 
+
+\
 After training our machine learning model with the dataset, we provide a fun interactive function where the users can select the skills they have, and we make a prediction of their annual salary based on this information. As shown in the picture below:
 
 
