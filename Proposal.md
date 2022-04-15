@@ -29,7 +29,15 @@ The dataset contains the skill set requirements for each job posting. The skills
 
 **Sketches and Data Analysis**
 1. Data Processing
+The data are well cleaned and processed. We have 42 parameters in total and each of them has 742 rows of data. Some data are converted into 0/1, which are very suitable for our machine learning model. We want to provide a summary about the distribution of   salary based on the locations of companies to the user. And user will choose what kind of skills he/she has and what states he/she wants to work in. Then we will give a recommendation of what kinds of skills he/she needs to work in those states. The following charts are parts of what we have explored:
+**The distribution of average salary of data scientists
+(x axis is average salary, y axis is count)**
+![](/images/national_avg_salary.png)
+**The average salary across the US**
+
+The redder the greater the value
+![a map](/images/nation_salary_map.png)
 2. System Design
 
-![A sketch](sketch_map.png)
+![A sketch](/images/sketch_map.png)
 
