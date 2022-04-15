@@ -40,12 +40,13 @@ The redder the greater the value
 
 \
 In order to build a machine learning model, we need to preprocessing the y-labels, which is the expected salary estimates. In the raw data, the salary is represented in ranges(as shown below), and we need to preprocessing it into numerical values, by calculating its mean values. 
-
+![A sketch](/images/sketch_map.png)
 
 2. System Design
+\
 First, we train a machine learning model using our dataset to determine the importance of each skill for landing a high salary job. As shown in the picture below:
 
 After training our machine learning model with the dataset, we provide a fun interactive function where the users can select the skills they have, and we make a prediction of their annual salary based on this information. As shown in the picture below:
 
-![A sketch](/images/sketch_map.png)
+
 ![A sketch](/images/model_prediction_sketch.png)
