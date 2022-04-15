@@ -28,7 +28,7 @@ We want to analyze our data in different dimensions. For example, the distributi
 The dataset contains the skill set requirements for each job posting. The skills include Python, Spark, aws, excel, sql, sas, keras, pythorch, scikit, tensor, hadoop, tableau, bi, flink mongo and google_an. With those data, we can give an overview of what are the most popular and high demanding skills that a Data Scientist is expected to acquire. Furthermore, we can build machine learning predictive models to predict the expected salary range by letting users enter their current skill sets. Furthermore, for people who want to gain more knowledge to land a job with higher salary, we will build models that show the impact of each skill on salary growth. Thus, applicants will not waste their time learning skills that have little impact on their salary.
 
 **Sketches and Data Analysis**
-1. Data Processing
+1. Data Processing\
 The data are well cleaned and processed. We have 42 parameters in total and each of them has 742 rows of data. Some data are converted into 0/1, which are very suitable for our machine learning model. We want to provide a summary about the distribution of   salary based on the locations of companies to the user. And user will choose what kind of skills he/she has and what states he/she wants to work in. Then we will give a recommendation of what kinds of skills he/she needs to work in those states. The following charts are parts of what we have explored:
 **The distribution of average salary of data scientists
 (x axis is average salary, y axis is count)**
@@ -37,7 +37,12 @@ The data are well cleaned and processed. We have 42 parameters in total and each
 
 The redder the greater the value
 ![a map](/images/nation_salary_map.png)
+
+\
+In order to build a machine learning model, we need to preprocessing the y-labels, which is the expected salary estimates. In the raw data, the salary is represented in ranges(as shown below), and we need to preprocessing it into numerical values, by calculating its mean values. 
+
+
 2. System Design
 
 ![A sketch](/images/sketch_map.png)
-
+![A sketch](/images/model_prediction_sketch.png)
