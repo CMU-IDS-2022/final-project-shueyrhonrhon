@@ -1,3 +1,4 @@
+from matplotlib.pyplot import legend
 from sklearn.preprocessing import scale
 import streamlit as st
 import pandas as pd
@@ -14,10 +15,6 @@ from sklearn.svm import SVR
 st.title("Data Scientist Career Accelerator")
 @st.cache
 def load_data():
-    """
-    Write 1-2 lines of code here to load the data from CSV to a pandas dataframe
-    and return it.
-    """
     data_path = "ds_data.csv"
     df = pd.read_csv(data_path)
     return df
@@ -35,6 +32,9 @@ if st.checkbox("Show raw data"):
     st.write(df[:25])
 
 st.header("The salary map of Data Scientist in the US")
+st.text("This app gives you a brief overview of the salary of Data Scientist in the US")
+st.text("You can choose what skills you have and we will predict the salary!!!")
+
 
 
 national_salary_chart = alt.Chart(df).mark_bar(color='#FF8080').encode(
@@ -52,14 +52,15 @@ state_salary_chart = alt.Chart(df[slices]).mark_bar(color="#C0EDA6").encode(
     tooltip = ['avgSalary', 'count()']
 )
 
-st.header("Top industry average salary in "+stateOption)
-top_industry_salary_chart = alt.Chart(df[slices]).mark_bar(color="#4D77FF").encode(
-    x=alt.X("Industry",sort="-y"),
-    y=alt.Y("mean(avgSalary)"),
+st.write(national_salary_chart+state_salary_chart)
+
+
+st.header("Top 5 industry average salary in "+stateOption)
+top_industry_salary_chart = alt.Chart(df[slices][:6]).mark_bar(color="#4D77FF").encode(
+    x=alt.X("mean(avgSalary)"),
+    y=alt.Y("Industry",sort="-x"),
     tooltip = ['Industry', 'mean(avgSalary)']
 )
-
-st.write(national_salary_chart+state_salary_chart)
 st.write(top_industry_salary_chart)
 
 def Xgb_Regression():
@@ -114,16 +115,13 @@ X = df.iloc[:,23:39]
 train_model(X,Y)
 
 st.header("Annual Salary Prediction")
-
 col1,col2 = st.columns(2)
 with col1:
+    skill_set = df.columns[23:39].values
     X = []
-    tmp = st.checkbox('Python')
-    X.append(int(tmp))
-    tmp = st.checkbox('Spark')
-    X.append(int(tmp))
-    tmp = st.checkbox('AWS')
-    X.append(int(tmp))
+    for skill in skill_set:
+        tmp = st.checkbox(skill)
+        X.append(int(tmp))
 
 
 predict = st.button("PREDICT")
