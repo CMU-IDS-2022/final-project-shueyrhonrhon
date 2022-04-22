@@ -11,6 +11,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, KFold
 from sklearn.svm import SVR
+from sklearn.decomposition import PCA
 
 st.title("Data Scientist Career Accelerator")
 @st.cache
@@ -65,53 +66,99 @@ st.write(top_industry_salary_chart)
 
 def Xgb_Regression():
     # model = xgb.XGBRegressor()
-    model = xgb.XGBRegressor(max_depth=7, eta=0.1,n_estimators=1000, learning_rate=0.1, use_label_encoder=False)
+    model = xgb.XGBRegressor(max_depth=7, eta=0.1,n_estimators=1000, learning_rate=0.1)
     return model
 def Svm_regression():
     model = SVR(kernel='rbf')
     return model
-
+def pca_reduction(X):
+    pca = PCA(n_components=3)
+    pca.fit(X)
+    X_new = pd.DataFrame(pca.transform(X))
+    print(X_new.head)
+    return X_new
 
 def train_model(x,y):
-    #model = Xgb_Regression()
-    model = Svm_regression()
-    print(x.shape)
-    print(y.shape)
-    # xtrain, xtest, ytrain, ytest=train_test_split(x, y, test_size=0.2)
-    xtrain = x
-    ytrain = y
+
+    #print(x.head)
+    model = Xgb_Regression()
+    #model = Svm_regression()
+    #print(x.shape)
+    #print(y.shape)
+    xtrain, xtest, ytrain, ytest=train_test_split(x, y, test_size=0.1)
+    #xtrain = x
+    #ytrain = y
     model.fit(xtrain, ytrain)
-    # feature importance
-    # print(model.feature_importances_)
-    # #print(model.feature_importances_.T.shape)
-    # # plot
-    # # pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
-    # # pyplot.show()
-    # df = pd.DataFrame(model.feature_importances_,columns=['importance'])
-    # df['skills'] = x.columns
-    # #df.reindex(x.columns, axis=1)
-    # print(df)
-    # feature_chart = alt.Chart(df).mark_bar(color="#C0EDA6").encode(
-    #   x=alt.X('skills',sort="-y"),
-    #   y=alt.Y('importance'),
-    # )
-    # st.write(feature_chart)
-    #   x=alt.X("Industry",sort="-y"),
-    # y=alt.Y("mean(avgSalary)"),
-    # tooltip = ['Industry', 'mean(avgSalary)']
+    #feature importance
+    #print(model.feature_importances_)
+    #print(model.feature_importances_.T.shape)
+    # plot
+    # pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
+    # pyplot.show()
+    df = pd.DataFrame(model.feature_importances_,columns=['importance'])
+    df['skills'] = x.columns
+    df.reindex(x.columns, axis=1)
+    #print(df)
+    feature_chart = alt.Chart(df).mark_bar(color="#C0EDA6").encode(
+      x=alt.X('skills',sort="-y"),
+      y=alt.Y('importance'),
+    )
+    st.write(feature_chart)
 
     #evaluate
-    scores = cross_val_score(model, xtrain, ytrain,cv=10)
+    scores = cross_val_score(model, xtrain, ytrain,cv=5)
     print("Mean cross-validation score: %.2f" % scores.mean())
-    # ypred = model.predict(xtest)
-    # mse = mean_squared_error(ytest, ypred)
-    # print("MSE: %.2f" % mse)
+    ypred = model.predict(xtest)
+    mse = mean_squared_error(ytest, ypred)
+    print("MSE: %.2f" % mse)
 
+def expand_data(df):
+    # size = []
+    # for (idx, row) in df.iterrows():
+    #     if '-' in row.loc['Size']:
+    #         size.append(row['size'].split(' - ')[1])
+    #     else:
+    #         size.append(row['size'])
+    # print(size)
+    size = []
+    for i in range(len(df)):
+        if ' - ' in df.loc[i, "Size"]:
+            #print(df.loc[i, "Size"].split(' - '))
+            tmp = df.loc[i, "Size"].split(' - ')[1]
+        elif '-' in df.loc[i, "Size"]:
+            tmp = df.loc[i, "Size"].split('-')[1]
+        elif '+' in df.loc[i, "Size"]:
+            tmp = df.loc[i, "Size"].split('+')[0]
+        else :
+            tmp = df.loc[i, "Size"]
+        #print(tmp)
+        if 'unknown' in tmp:
+            size.append(1)
+        else :
+            size.append(int(tmp))
+    df['new_size'] = size
+    #print(df['new_size'])
+    df = df.loc[df.index.repeat(df.new_size)].reset_index(drop=True)
+    return df
 
+#df = expand_data(df)
 Y = df.iloc[:,19]
 #print(Y.head)
-X = df.iloc[:,23:39]
+
+X = pd.concat([df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
+#X = pd.concat([df.iloc[:,21],df.iloc[:,12]],axis = 1)
+#X = df.iloc[:,23:39]
+X["Job Location"] = X["Job Location"].astype("category")
+X["Sector"] = X["Sector"].astype("category")
+X["seniority_by_title"] = X["seniority_by_title"].astype("category")
+X["Degree"] = X["Degree"].astype("category")
+X["Job Location"] = X["Job Location"].cat.codes
+X["Sector"] = X["Sector"].cat.codes
+X["seniority_by_title"] = X["seniority_by_title"].cat.codes
+X["Degree"] = X["Degree"].cat.codes
+#X = pca_reduction(X)
 #print(X.head)
+
 train_model(X,Y)
 
 st.header("Annual Salary Prediction")
