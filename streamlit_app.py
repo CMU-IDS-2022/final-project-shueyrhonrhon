@@ -13,6 +13,8 @@ from sklearn.model_selection import cross_val_score, KFold
 from sklearn.svm import SVR
 from sklearn.decomposition import PCA
 
+from vega_datasets import data
+
 st.title("Data Scientist Career Accelerator")
 @st.cache
 def load_data():
@@ -33,6 +35,43 @@ if st.checkbox("Show raw data"):
     st.write(df[:25])
 
 st.header("The salary map of Data Scientist in the US")
+
+counties = alt.topo_feature(data.us_10m.url, 'counties')
+source = data.unemployment.url
+
+
+us_states = ['AK', 'AL', 'AR', 'AS', 'AZ', 'CA', 'CO', 'CQ', 'CT', 'DC', 'DE', 'FL', 'GA', 'GU',
+           'HI', 'IA', 'ID', 'IL', 'IN', 'KS', 'KY', 'LA', 'MA', 'MD', 'ME',
+           'MI', 'MN', 'MO', 'MS', 'MT', 'NC', 'ND', 'NE', 'NH', 'NJ', 'NM',
+           'NV', 'NY', 'OH', 'OK', 'OR', 'PA', 'PR', 'RI', 'SC', 'SD', 'TN', 'TX',
+           'UT', 'VA', 'VI', 'VT', 'WA', 'WI', 'WV', 'WY']
+dic = {}
+for i, s in enumerate(us_states):
+    dic[s] = i + 1
+df_map = df.groupby('Job Location').agg({'avgSalary': np.mean}).reset_index()
+df_map['id'] = df_map['Job Location'].apply(lambda x : dic[x])
+
+states = alt.topo_feature(data.us_10m.url, feature='states')
+
+map_salary = alt.Chart(states).mark_geoshape().encode(
+    color='avgSalary:Q'
+).transform_lookup(
+    lookup='id',
+    from_=alt.LookupData(df_map, 'id', ['avgSalary'])
+).project('albersUsa')
+
+background = alt.Chart(states).mark_geoshape(
+    fill='lightgray',
+    stroke='white'
+).properties(
+    title='US State DS salary',
+    width=700,
+    height=400
+).project('albersUsa')
+
+st.write(background + map_salary)
+
+
 st.text("This app gives you a brief overview of the salary of Data Scientist in the US")
 st.text("You can choose what skills you have and we will predict the salary!!!")
 
