@@ -1,3 +1,4 @@
+from turtle import color
 from matplotlib.pyplot import legend
 from sklearn.preprocessing import scale
 import streamlit as st
@@ -6,14 +7,19 @@ import altair as alt
 import numpy as np
 
 import xgboost as xgb
+from xgboost import plot_tree
+import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 # from matplotlib import pyplot
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, KFold
 from sklearn.svm import SVR
 from sklearn.decomposition import PCA
+from xgboost import XGBRegressor
 
 from vega_datasets import data
+
+
 
 st.title("Data Scientist Career Accelerator")
 @st.cache
@@ -117,6 +123,7 @@ def pca_reduction(X):
     print(X_new.head)
     return X_new
 
+
 def train_model(x,y):
 
     #print(x.head)
@@ -128,6 +135,9 @@ def train_model(x,y):
     #xtrain = x
     #ytrain = y
     model.fit(xtrain, ytrain)
+
+    print("***")
+    print(xtest)
     #feature importance
     #print(model.feature_importances_)
     #print(model.feature_importances_.T.shape)
@@ -135,14 +145,15 @@ def train_model(x,y):
     # pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
     # pyplot.show()
     df = pd.DataFrame(model.feature_importances_,columns=['importance'])
-    df['skills'] = x.columns
+    df['features'] = x.columns
     df.reindex(x.columns, axis=1)
     #print(df)
     feature_chart = alt.Chart(df).mark_bar(color="#C0EDA6").encode(
-      x=alt.X('skills',sort="-y"),
-      y=alt.Y('importance'),
+      y=alt.Y('features',sort="-x"),
+      x=alt.X('importance'),
     )
     st.write(feature_chart)
+ 
 
     #evaluate
     scores = cross_val_score(model, xtrain, ytrain,cv=5)
@@ -150,6 +161,36 @@ def train_model(x,y):
     ypred = model.predict(xtest)
     mse = mean_squared_error(ytest, ypred)
     print("MSE: %.2f" % mse)
+
+    y_pred_test = model.predict(xtest)
+    fig,ax=plt.subplots()
+    ax.scatter(ytest,y_pred_test)
+    ax.plot(ytest,ytest,color="red")
+    ax.set_xlabel("Testing target values")
+    ax.set_ylabel("Predicted targeted values")
+
+    source = pd.DataFrame({
+        'ytest':ytest,
+        'y_pred_test':y_pred_test,
+    })
+
+    predVSactual=alt.Chart(source).mark_circle(size=60).encode(
+        x='ytest',
+        y='y_pred_test',
+    ).interactive()
+
+    line = alt.Chart(source).mark_line(
+        color='red',
+        size=3
+    ).encode(
+        x="ytest",
+        y="ytest",
+    )
+        
+
+    st.altair_chart(predVSactual+line,use_container_width=True)
+
+
 
 def expand_data(df):
     # size = []
@@ -183,46 +224,82 @@ def expand_data(df):
 #df = expand_data(df)
 Y = df.iloc[:,19]
 #print(Y.head)
-
-X = pd.concat([df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
+#print(df.shape)
+X = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
 #X = pd.concat([df.iloc[:,21],df.iloc[:,12]],axis = 1)
 #X = df.iloc[:,23:39]
 X["Job Location"] = X["Job Location"].astype("category")
+X["Industry"]=X["Industry"].astype("category")
 X["Sector"] = X["Sector"].astype("category")
 X["seniority_by_title"] = X["seniority_by_title"].astype("category")
 X["Degree"] = X["Degree"].astype("category")
+X["Size"] = X["Size"].astype("category")
+X["Type of ownership"]=X["Type of ownership"].astype("category")
+
 X["Job Location"] = X["Job Location"].cat.codes
+X["Industry"] = X["Industry"].cat.codes
 X["Sector"] = X["Sector"].cat.codes
 X["seniority_by_title"] = X["seniority_by_title"].cat.codes
 X["Degree"] = X["Degree"].cat.codes
+X["Size"] = X["Size"].cat.codes
+X["Type of ownership"] = X["Type of ownership"].cat.codes
+
+print(X["Job Location"])
 #X = pca_reduction(X)
 #print(X.head)
 
-train_model(X,Y)
-
-st.header("Annual Salary Prediction")
-col1,col2 = st.columns(2)
-with col1:
-    skill_set = df.columns[23:39].values
-    X = []
-    for skill in skill_set:
-        tmp = st.checkbox(skill)
-        X.append(int(tmp))
+model  = train_model(X,Y)
 
 
-predict = st.button("PREDICT")
 
-with col2:
+st.header("Predict your expected salary!")
 
-    con = '<p style="font-family:sans-serif; color:Red; font-size: 42px;">Congratulation!</p>'
-    st.markdown(con, unsafe_allow_html=True)
-    #st.write("Congratulation!")
-    st.write("You could make ")
-    if predict:
-        st.write("$1000000")
-    else:
-        st.write("_ _ _ _")
-    st.write("a year!")
+job_location_option = st.selectbox(
+     'Where do you want to be located?',
+     (df['Job Location'].unique()))
+
+st.write('You selected:', job_location_option)
+
+
+industry_option = st.selectbox(
+     'What industry you want to be in?',
+     (df['Industry'].unique()))
+
+st.write('You selected:', industry_option)
+
+sector_option = st.selectbox(
+     'What sector you want to be in?',
+     (df['Sector'].unique()))
+
+st.write('You selected:', sector_option)
+
+
+
+# st.header("Annual Salary Prediction")
+# col1,col2 = st.columns(2)
+# with col1:
+#     skill_set = df.columns[23:39].values
+#     X = []
+#     for skill in skill_set:
+#         tmp = st.checkbox(skill)
+#         X.append(int(tmp))
+
+
+# predict = st.button("PREDICT")
+
+
+# with col2:
+
+#     con = '<p style="font-family:sans-serif; color:Red; font-size: 42px;">Congratulation!</p>'
+#     st.markdown(con, unsafe_allow_html=True)
+#     #st.write("Congratulation!")
+#     st.write("You could make ")
+#     if predict:
+
+#         st.write("$1000000")
+#     else:
+#         st.write("_ _ _ _")
+#     st.write("a year!")
 
 
 
