@@ -20,8 +20,8 @@ from vega_datasets import data
 
 
 st.title("Data Scientist Career Accelerator")
-@st.cache
-def load_data():
+@st.cache()
+def load_data(allow_output_mutation=True):
     data_path = "ds_data.csv"
     df = pd.read_csv(data_path)
     return df
@@ -76,27 +76,30 @@ st.write(background + map_salary)
 st.text("This app gives you a brief overview of the salary of Data Scientist in the US")
 st.text("You can choose what skills you have and we will predict the salary!!!")
 
-national_salary_chart = alt.Chart(df).mark_bar(color='#FF8080').encode(
-    x = alt.X("avgSalary", bin=alt.Bin(extent=[0,300],step=50)),
+national_salary_chart = alt.Chart(df).transform_calculate(
+    avgSalary_binned = 'datum.avgSalary<=50?"0-50":datum.avgSalary<=100?"50-100":datum.avgSalary<=150?"100-150":datum.avgSalary<=200?"150-200":datum.avgSalary<=250?"200-250":"250-300"',
+).mark_bar(tooltip=True,color="#FF8080",opacity=0.5).encode(
+    x = alt.X('avgSalary_binned:O'),
     y=alt.Y("count()"),
-    tooltip = ['avgSalary', 'count()']
 ).properties(
     width=700,
-    height=300
+    height=300,
 )
 
 st.header("Select the states you want to know about:")
 state_option = st.selectbox(
         'state',
-        us_states,
+        df['Job Location'].unique()
 )
 
 state_slices = get_state_slices(df,state_option);
 
-state_salary_chart = alt.Chart(df[state_slices],title="The salary in "+state_option+" and the US").mark_bar(color="#C0EDA6").encode(
-    x=alt.X("avgSalary", bin=alt.Bin(extent=[0,300],step=50)),
+state_salary_chart = alt.Chart(df[state_slices],title="The salary in "+state_option+" and the US(red bar is nationwide,blue bar is statewide)").transform_calculate(
+    avgSalary_binned = 'datum.avgSalary<=50?"0-50":datum.avgSalary<=100?"50-100":datum.avgSalary<=150?"100-150":datum.avgSalary<=200?"150-200":datum.avgSalary<=250?"200-250":"250-300"',
+).mark_bar(tooltip=True).encode(
+    x = alt.X('avgSalary_binned:O'),
     y=alt.Y("count()"),
-    tooltip = ['avgSalary', 'count()'],
+    color = alt.Color('Job Location:N', title='state salary')
 ).properties(
     width=700,
     height=300
