@@ -171,6 +171,8 @@ ownership_donut_chart = alt.Chart(df[state_slices],title = "Amount of different 
 # st.altair_chart(size_donut_chart)
 # st.altair_chart(ownership_donut_chart)
 
+st.header("What is the most important skill?")
+
 cols = st.columns(2)
 with cols[0]:
     st.write(rating_chart)
