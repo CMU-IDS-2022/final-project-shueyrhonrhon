@@ -86,7 +86,7 @@ state_option = st.selectbox(
         index=default_ix
 )
 
-state_slices = get_state_slices(df,state_option);
+state_slices = get_state_slices(df,state_option)
 
 
 nationwide = pd.DataFrame()
@@ -154,7 +154,7 @@ rating_chart = alt.Chart(df[state_slices], title = "rating and salary in "+state
 
 size_donut_chart = alt.Chart(df[state_slices],title = "company size in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
     theta=alt.Theta(field="Size",aggregate="count"),
-    color=alt.Color(field="Size"),  
+    color=alt.Color(field="Size"),
 ).properties(
     width=300,
     height=300
@@ -164,12 +164,12 @@ ownership_donut_chart = alt.Chart(df[state_slices],title = "Amount of different 
     theta=alt.Theta(field="Type of ownership",aggregate='count'),
     color=alt.Color(field="Type of ownership"),
 ).properties(
-    width=300,
+    width=700,
     height=300
 )
 
 # st.altair_chart(size_donut_chart)
-# st.altair_chart(ownership_donut_chart)
+st.altair_chart(ownership_donut_chart)
 
 cols = st.columns(2)
 with cols[0]:
@@ -253,7 +253,7 @@ def model_accuracy(model, xtrain, xtest, ytrain, ytest):
     ).encode(
         x="ytest",
         y="ytest",
-    )      
+    )
     st.altair_chart(predVSactual+line,use_container_width=True)
 
 def expand_data(df):
@@ -420,7 +420,7 @@ st.write("You selected:", selected_skillsets)
 
 skills = ['Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
         'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
-        'mongo', 'google_an'] 
+        'mongo', 'google_an']
 
 
 for i in range(len(skills)):
