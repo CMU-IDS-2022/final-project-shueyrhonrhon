@@ -1,4 +1,4 @@
-from turtle import color
+from turtle import color, title
 from matplotlib.pyplot import legend
 from sklearn.preprocessing import scale
 import streamlit as st
@@ -7,7 +7,7 @@ import altair as alt
 import numpy as np
 
 import xgboost as xgb
-from xgboost import plot_tree
+# from xgboost import plot_tree
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 # from matplotlib import pyplot
@@ -16,9 +16,7 @@ from sklearn.model_selection import cross_val_score, KFold
 from sklearn.svm import SVR
 from sklearn.decomposition import PCA
 from xgboost import XGBRegressor
-
 from vega_datasets import data
-
 
 
 st.title("Data Scientist Career Accelerator")
@@ -28,13 +26,11 @@ def load_data():
     df = pd.read_csv(data_path)
     return df
 
-@st.cache
-def get_slice(df,state):
+def get_state_slices(df,state):
     lable = pd.Series([True]*len(df),index=df.index)
     if state:
         lable &= df['Job Location'].apply(lambda x : True if x==state else False)
     return lable
-
 
 df = load_data()
 if st.checkbox("Show raw data"):
@@ -77,37 +73,78 @@ background = alt.Chart(states).mark_geoshape(
 
 st.write(background + map_salary)
 
-
 st.text("This app gives you a brief overview of the salary of Data Scientist in the US")
 st.text("You can choose what skills you have and we will predict the salary!!!")
-
-
 
 national_salary_chart = alt.Chart(df).mark_bar(color='#FF8080').encode(
     x = alt.X("avgSalary", bin=alt.Bin(extent=[0,300],step=50)),
     y=alt.Y("count()"),
     tooltip = ['avgSalary', 'count()']
+).properties(
+    width=700,
+    height=300
 )
 
-stateOption = "CA"
-slices = get_slice(df,stateOption)
-st.header("The salary in "+stateOption+" and the US")
-state_salary_chart = alt.Chart(df[slices]).mark_bar(color="#C0EDA6").encode(
+st.header("Select the states you want to know about:")
+state_option = st.selectbox(
+        'state',
+        us_states,
+)
+
+state_slices = get_state_slices(df,state_option);
+
+state_salary_chart = alt.Chart(df[state_slices],title="The salary in "+state_option+" and the US").mark_bar(color="#C0EDA6").encode(
     x=alt.X("avgSalary", bin=alt.Bin(extent=[0,300],step=50)),
     y=alt.Y("count()"),
-    tooltip = ['avgSalary', 'count()']
+    tooltip = ['avgSalary', 'count()'],
+).properties(
+    width=700,
+    height=300
 )
 
-st.write(national_salary_chart+state_salary_chart)
+st.altair_chart(national_salary_chart+state_salary_chart)
 
 
-st.header("Top 5 industry average salary in "+stateOption)
-top_industry_salary_chart = alt.Chart(df[slices][:6]).mark_bar(color="#4D77FF").encode(
+top_industry_salary_chart = alt.Chart(df[state_slices][:6],title="Top 5 industry average salary in "+state_option).mark_bar(color="#4D77FF").encode(
     x=alt.X("mean(avgSalary)"),
     y=alt.Y("Industry",sort="-x"),
-    tooltip = ['Industry', 'mean(avgSalary)']
+    tooltip = ['Industry', 'mean(avgSalary)'] 
+).properties(
+    width=700,
+    height=300
 )
 st.write(top_industry_salary_chart)
+
+rating_chart = alt.Chart(df[state_slices]).mark_point(tooltip=True,size=80).encode(
+    x=alt.X("avgSalary",scale=alt.Scale(zero=False)),
+    y=alt.Y("Rating",sort="-x"),
+).properties(
+    width=700,
+    height=300
+).transform_filter(
+    alt.datum.Rating != -1
+).interactive()
+
+st.write(rating_chart)
+
+size_donut_chart = alt.Chart(df[state_slices],title = "Amount of different size companies in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
+    theta=alt.Theta(field="Size",aggregate="count"),
+    color=alt.Color(field="Size"),  
+).properties(
+    width=700,
+    height=300
+)
+
+ownership_donut_chart = alt.Chart(df[state_slices],title = "Amount of different ownership companies in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
+    theta=alt.Theta(field="Type of ownership",aggregate='count'),
+    color=alt.Color(field="Type of ownership"),
+).properties(
+    width=700,
+    height=300
+)
+
+st.altair_chart(size_donut_chart)
+st.altair_chart(ownership_donut_chart)
 
 def Xgb_Regression():
     # model = xgb.XGBRegressor()
