@@ -123,21 +123,22 @@ def pca_reduction(X):
     print(X_new.head)
     return X_new
 
-
 def train_model(x,y):
-
     #print(x.head)
     model = Xgb_Regression()
     #model = Svm_regression()
     #print(x.shape)
     #print(y.shape)
     xtrain, xtest, ytrain, ytest=train_test_split(x, y, test_size=0.1)
-    #xtrain = x
-    #ytrain = y
     model.fit(xtrain, ytrain)
 
     print("***")
     print(xtest)
+
+    return model, xtrain, xtest, ytrain, ytest
+
+
+def feature_importance(model,x):
     #feature importance
     #print(model.feature_importances_)
     #print(model.feature_importances_.T.shape)
@@ -153,8 +154,9 @@ def train_model(x,y):
       x=alt.X('importance'),
     )
     st.write(feature_chart)
- 
 
+
+def model_accuracy(model, xtrain, xtest, ytrain, ytest):
     #evaluate
     scores = cross_val_score(model, xtrain, ytrain,cv=5)
     print("Mean cross-validation score: %.2f" % scores.mean())
@@ -163,11 +165,6 @@ def train_model(x,y):
     print("MSE: %.2f" % mse)
 
     y_pred_test = model.predict(xtest)
-    fig,ax=plt.subplots()
-    ax.scatter(ytest,y_pred_test)
-    ax.plot(ytest,ytest,color="red")
-    ax.set_xlabel("Testing target values")
-    ax.set_ylabel("Predicted targeted values")
 
     source = pd.DataFrame({
         'ytest':ytest,
@@ -185,12 +182,8 @@ def train_model(x,y):
     ).encode(
         x="ytest",
         y="ytest",
-    )
-        
-
+    )      
     st.altair_chart(predVSactual+line,use_container_width=True)
-
-
 
 def expand_data(df):
     # size = []
@@ -228,6 +221,7 @@ Y = df.iloc[:,19]
 X = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
 #X = pd.concat([df.iloc[:,21],df.iloc[:,12]],axis = 1)
 #X = df.iloc[:,23:39]
+print(X.head)
 X["Job Location"] = X["Job Location"].astype("category")
 X["Industry"]=X["Industry"].astype("category")
 X["Sector"] = X["Sector"].astype("category")
@@ -244,49 +238,148 @@ X["Degree"] = X["Degree"].cat.codes
 X["Size"] = X["Size"].cat.codes
 X["Type of ownership"] = X["Type of ownership"].cat.codes
 
-print(X["Job Location"])
-#X = pca_reduction(X)
-#print(X.head)
 
-model  = train_model(X,Y)
+model, xtrain, xtest, ytrain, ytest  = train_model(X,Y)
+feature_importance(model,X)
+model_accuracy(model, xtrain, xtest, ytrain, ytest)
+
+print(X.columns)
+#Index(['Rating', 'Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
+    #    'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
+    #    'mongo', 'google_an', 'Job Location', 'Size', 'Type of ownership',
+    #    'Industry', 'Sector', 'seniority_by_title', 'Degree'],
+    #   dtype='object')
 
 
+##Make predictions based on selection
 
 st.header("Predict your expected salary!")
+
+X_modified = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
+newRow = {i:0 for i in X.columns}
 
 job_location_option = st.selectbox(
      'Where do you want to be located?',
      (df['Job Location'].unique()))
 
 st.write('You selected:', job_location_option)
-
+newRow['Job Location']=job_location_option
 
 industry_option = st.selectbox(
      'What industry you want to be in?',
      (df['Industry'].unique()))
 
 st.write('You selected:', industry_option)
+newRow['Industry']=industry_option
 
 sector_option = st.selectbox(
      'What sector you want to be in?',
      (df['Sector'].unique()))
 
 st.write('You selected:', sector_option)
+newRow['Sector']=sector_option
+
+size_option = st.selectbox(
+     'What is your expected company size?',
+     (df['Size'].unique()))
+
+st.write('You selected:', size_option)
+newRow['Size']=size_option
+
+ownership_option = st.selectbox(
+     'What is your expected type of ownership?',
+     (df['Type of ownership'].unique()))
+
+st.write('You selected:', ownership_option)
+newRow['Type of ownership']=ownership_option
+
+seniority_option = st.selectbox(
+     'Are you looking forward to a senior role?',
+     (df['seniority_by_title'].unique()))
+
+st.write('You selected:', seniority_option)
+newRow['seniority_by_title']=seniority_option
+
+degree_option = st.selectbox(
+     'What types of degree you acquired?',
+     (df['Degree'].unique()))
+
+st.write('You selected:', degree_option)
+newRow['Degree']=degree_option
+
+rating = st.slider('Your expected company rating?', -1, 4, 5)
+st.write('You selected:', rating)
+newRow['Rating']=rating
+
+st.header("Check the skills you've acquired:")
+selected_skillsets = []
+col1,col2,col3, col4 = st.columns(4)
+with col1:
+    skill_set = df.columns[23:27].values
+    for skill in skill_set:
+        tmp = st.checkbox(skill)
+        selected_skillsets.append(int(tmp))
+with col2:
+    skill_set = df.columns[27:31].values
+    for skill in skill_set:
+        tmp = st.checkbox(skill)
+        selected_skillsets.append(int(tmp))
+
+with col3:
+    skill_set = df.columns[31:35].values
+    for skill in skill_set:
+        tmp = st.checkbox(skill)
+        selected_skillsets.append(int(tmp))
+
+
+with col4:
+    skill_set = df.columns[35:39].values
+    for skill in skill_set:
+        tmp = st.checkbox(skill)
+        selected_skillsets.append(int(tmp))
+
+st.write("You selected:", selected_skillsets)
+
+
+#Index(['Rating', 'Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
+    #    'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
+    #    'mongo', 'google_an', 'Job Location', 'Size', 'Type of ownership',
+    #    'Industry', 'Sector', 'seniority_by_title', 'Degree'],
+    #   dtype='object')
+
+skills = ['Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
+        'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
+        'mongo', 'google_an'] 
+
+
+for i in range(len(skills)):
+    newRow[skills[i]] = selected_skillsets[i]
 
 
 
-# st.header("Annual Salary Prediction")
-# col1,col2 = st.columns(2)
-# with col1:
-#     skill_set = df.columns[23:39].values
-#     X = []
-#     for skill in skill_set:
-#         tmp = st.checkbox(skill)
-#         X.append(int(tmp))
+X_modified = X_modified.append(newRow,ignore_index=True)
+X_modified["Job Location"] = X_modified["Job Location"].astype("category")
+X_modified["Industry"]=X_modified["Industry"].astype("category")
+X_modified["Sector"] = X_modified["Sector"].astype("category")
+X_modified["seniority_by_title"] = X_modified["seniority_by_title"].astype("category")
+X_modified["Degree"] = X_modified["Degree"].astype("category")
+X_modified["Size"] = X_modified["Size"].astype("category")
+X_modified["Type of ownership"]=X_modified["Type of ownership"].astype("category")
 
+X_modified["Job Location"] = X_modified["Job Location"].cat.codes
+X_modified["Industry"] = X_modified["Industry"].cat.codes
+X_modified["Sector"] = X_modified["Sector"].cat.codes
+X_modified["seniority_by_title"] = X_modified["seniority_by_title"].cat.codes
+X_modified["Degree"] = X_modified["Degree"].cat.codes
+X_modified["Size"] = X_modified["Size"].cat.codes
+X_modified["Type of ownership"] = X_modified["Type of ownership"].cat.codes
 
-# predict = st.button("PREDICT")
+new_row_encode = pd.DataFrame(X_modified.iloc[[-1]])
+new_predicted = model.predict(new_row_encode)[0]
 
+predict_button = st.button("Get My Salary Prediction:")
+if predict_button:
+    st.write("Your expected salary is ",new_predicted,"K")
 
 # with col2:
 
