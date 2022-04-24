@@ -52,89 +52,111 @@ for i, s in enumerate(us_states):
     dic[s] = i + 1
 df_map = df.groupby('Job Location').agg({'avgSalary': np.mean}).reset_index()
 df_map['id'] = df_map['Job Location'].apply(lambda x : dic[x])
-
 states = alt.topo_feature(data.us_10m.url, feature='states')
 
 map_salary = alt.Chart(states).mark_geoshape().encode(
-    color='avgSalary:Q'
+    color='avgSalary:Q',
+    tooltip=[
+        alt.Tooltip("Job Location:N", title="State"),
+        alt.Tooltip("avgSalary" + ":O", format='.1f', title="Average Salary"),
+    ],
 ).transform_lookup(
     lookup='id',
-    from_=alt.LookupData(df_map, 'id', ['avgSalary'])
+    from_=alt.LookupData(df_map, 'id', ['Job Location', 'avgSalary'])
 ).project('albersUsa')
 
 background = alt.Chart(states).mark_geoshape(
     fill='lightgray',
     stroke='white'
 ).properties(
-    title='US State DS salary',
+    title='map of average data scientist salary/K',
     width=700,
     height=400
 ).project('albersUsa')
 
 st.write(background + map_salary)
 
-st.text("This app gives you a brief overview of the salary of Data Scientist in the US")
-st.text("You can choose what skills you have and we will predict the salary!!!")
-
-national_salary_chart = alt.Chart(df).transform_calculate(
-    avgSalary_binned = 'datum.avgSalary<=50?"0-50":datum.avgSalary<=100?"50-100":datum.avgSalary<=150?"100-150":datum.avgSalary<=200?"150-200":datum.avgSalary<=250?"200-250":"250-300"',
-).mark_bar(tooltip=True,color="#FF8080",opacity=0.5).encode(
-    x = alt.X('avgSalary_binned:O'),
-    y=alt.Y("count()"),
-).properties(
-    width=700,
-    height=300,
-)
 
 st.header("Select the states you want to know about:")
+values = df['Job Location'].unique().tolist()
+default_ix = values.index('CA')
 state_option = st.selectbox(
         'state',
-        df['Job Location'].unique()
+        values,
+        index=default_ix
 )
 
 state_slices = get_state_slices(df,state_option);
 
-state_salary_chart = alt.Chart(df[state_slices],title="The salary in "+state_option+" and the US(red bar is nationwide,blue bar is statewide)").transform_calculate(
-    avgSalary_binned = 'datum.avgSalary<=50?"0-50":datum.avgSalary<=100?"50-100":datum.avgSalary<=150?"100-150":datum.avgSalary<=200?"150-200":datum.avgSalary<=250?"200-250":"250-300"',
-).mark_bar(tooltip=True).encode(
-    x = alt.X('avgSalary_binned:O'),
-    y=alt.Y("count()"),
-    color = alt.Color('Job Location:N', title='state salary')
+
+nationwide = pd.DataFrame()
+nationwide['avgSalary'] = df['avgSalary']
+nationwide['name'] = 'nationwide salary'
+state = pd.DataFrame()
+state['avgSalary'] = df[state_slices]['avgSalary']
+state['name'] = state_option + ' salary'
+
+category = ['0-50K', '50K-100K', '100K-150K', '150K-200K', '200K-250K', '250K-300K']
+nationwide['binned']=pd.cut(x=nationwide['avgSalary'], bins=[0,50,100,150,200, 250, 300], labels=category)
+nation_count = pd.value_counts(nationwide['binned']).reset_index()
+nation_count['name'] = 'nationwide salary'
+state['binned']=pd.cut(x=state['avgSalary'], bins=[0,50,100,150,200, 250, 300], labels=category)
+state_count = pd.value_counts(state['binned']).reset_index()
+state_count['name'] = state_option + ' salary'
+
+
+df_compare = nation_count.append(state_count, ignore_index=True)
+
+compare_chart = alt.Chart(df_compare, title = state_option + " v.s. nationwide").mark_bar(opacity=1.0).encode(
+    x=alt.X('index', sort=category),
+    y=alt.Y('binned:Q', stack=None),
+    color="name",
 ).properties(
-    width=700,
+    width=300,
     height=300
 )
+# st.write(compare_chart)
 
-st.altair_chart(national_salary_chart+state_salary_chart)
 
-
-top_industry_salary_chart = alt.Chart(df[state_slices][:6],title="Top 5 industry average salary in "+state_option).mark_bar(color="#4D77FF").encode(
+top_industry_salary_chart = alt.Chart(df[state_slices][:6],title="top 5 industry in "+state_option).mark_bar(color="#4D77FF").encode(
     x=alt.X("mean(avgSalary)"),
     y=alt.Y("Industry",sort="-x"),
-    tooltip = ['Industry', 'mean(avgSalary)'] 
+    tooltip = ['Industry', 'mean(avgSalary)'],
+    color=alt.Color(
+        "mean(avgSalary)" + ":Q",
+        scale = alt.Scale(scheme="blues", reverse=False),
+        legend=None,
+    ),
 ).properties(
-    width=700,
+    width=300,
     height=300
 )
-st.write(top_industry_salary_chart)
+# st.write(top_industry_salary_chart)
 
-rating_chart = alt.Chart(df[state_slices]).mark_point(tooltip=True,size=80).encode(
+
+cols = st.columns(2)
+with cols[0]:
+    st.write(compare_chart)
+with cols[1]:
+    st.write(top_industry_salary_chart)
+
+rating_chart = alt.Chart(df[state_slices], title = "rating and salary in "+state_option).mark_point(tooltip=True,size=80).encode(
     x=alt.X("avgSalary",scale=alt.Scale(zero=False)),
     y=alt.Y("Rating",sort="-x"),
 ).properties(
-    width=700,
+    width=300,
     height=300
 ).transform_filter(
     alt.datum.Rating != -1
 ).interactive()
 
-st.write(rating_chart)
+# st.write(rating_chart)
 
-size_donut_chart = alt.Chart(df[state_slices],title = "Amount of different size companies in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
+size_donut_chart = alt.Chart(df[state_slices],title = "company size in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
     theta=alt.Theta(field="Size",aggregate="count"),
     color=alt.Color(field="Size"),  
 ).properties(
-    width=700,
+    width=300,
     height=300
 )
 
@@ -142,12 +164,18 @@ ownership_donut_chart = alt.Chart(df[state_slices],title = "Amount of different 
     theta=alt.Theta(field="Type of ownership",aggregate='count'),
     color=alt.Color(field="Type of ownership"),
 ).properties(
-    width=700,
+    width=300,
     height=300
 )
 
-st.altair_chart(size_donut_chart)
-st.altair_chart(ownership_donut_chart)
+# st.altair_chart(size_donut_chart)
+# st.altair_chart(ownership_donut_chart)
+
+cols = st.columns(2)
+with cols[0]:
+    st.write(rating_chart)
+with cols[1]:
+    st.write(size_donut_chart)
 
 def Xgb_Regression():
     # model = xgb.XGBRegressor()
