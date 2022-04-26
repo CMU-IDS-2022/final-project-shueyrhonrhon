@@ -274,110 +274,114 @@ if selected=="Salary Prediction":
     X_modified = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
     newRow = {i:0 for i in X.columns}
 
-    job_location_option = st.selectbox(
-        'Where do you want to be located?',
-        (df['Job Location'].unique()))
+    with st.form("my_form"):
+        job_location_option = st.selectbox(
+            'Where do you want to be located?',
+            (df['Job Location'].unique()))
 
-    newRow['Job Location']=job_location_option
+        newRow['Job Location']=job_location_option
 
-    industry_option = st.selectbox(
-        'What industry you want to be in?',
-        (df['Industry'].unique()))
+        industry_option = st.selectbox(
+            'What industry you want to be in?',
+            (df['Industry'].unique()))
 
-    newRow['Industry']=industry_option
+        newRow['Industry']=industry_option
 
-    sector_option = st.selectbox(
-        'What sector you want to be in?',
-        (df['Sector'].unique()))
+        sector_option = st.selectbox(
+            'What sector you want to be in?',
+            (df['Sector'].unique()))
 
-    newRow['Sector']=sector_option
+        newRow['Sector']=sector_option
 
-    size_option = st.selectbox(
-        'What is your expected company size?',
-        (df['Size'].unique()))
+        size_option = st.selectbox(
+            'What is your expected company size?',
+            (df['Size'].unique()))
 
-    newRow['Size']=size_option
+        newRow['Size']=size_option
 
-    ownership_option = st.selectbox(
-        'What is your expected type of ownership?',
-        (df['Type of ownership'].unique()))
+        ownership_option = st.selectbox(
+            'What is your expected type of ownership?',
+            (df['Type of ownership'].unique()))
 
-    newRow['Type of ownership']=ownership_option
+        newRow['Type of ownership']=ownership_option
 
-    seniority_option = st.selectbox(
-        'Are you looking forward to a senior role?',
-        (df['seniority_by_title'].unique()))
+        seniority_option = st.selectbox(
+            'Are you looking forward to a senior role?',
+            (df['seniority_by_title'].unique()))
 
-    newRow['seniority_by_title']=seniority_option
+        newRow['seniority_by_title']=seniority_option
 
-    degree_option = st.selectbox(
-        'What types of degree you acquired?',
-        (df['Degree'].unique()))
+        degree_option = st.selectbox(
+            'What types of degree you acquired?',
+            (df['Degree'].unique()))
 
-    newRow['Degree']=degree_option
+        newRow['Degree']=degree_option
 
-    rating = st.slider('Your expected company rating?', -1, 4, 5)
-    newRow['Rating']=rating
+        rating = st.slider('Your expected company rating?', -1, 4, 5)
+        newRow['Rating']=rating
 
-    st.header("Check the skills you've acquired:")
-    selected_skillsets = []
-    col1,col2,col3, col4 = st.columns(4)
-    with col1:
-        skill_set = df.columns[23:27].values
-        for skill in skill_set:
-            tmp = st.checkbox(skill)
-            selected_skillsets.append(int(tmp))
-    with col2:
-        skill_set = df.columns[27:31].values
-        for skill in skill_set:
-            tmp = st.checkbox(skill)
-            selected_skillsets.append(int(tmp))
+        st.header("Check the skills you've acquired:")
+        selected_skillsets = []
+        
 
-    with col3:
-        skill_set = df.columns[31:35].values
-        for skill in skill_set:
-            tmp = st.checkbox(skill)
-            selected_skillsets.append(int(tmp))
+    # Every form must have a submit button.
+        col1,col2,col3, col4 = st.columns(4)
+        with col1:
+            skill_set = df.columns[23:27].values
+            for skill in skill_set:
+                tmp = st.checkbox(skill)
+                selected_skillsets.append(int(tmp))
+        with col2:
+            skill_set = df.columns[27:31].values
+            for skill in skill_set:
+                tmp = st.checkbox(skill)
+                selected_skillsets.append(int(tmp))
 
-
-    with col4:
-        skill_set = df.columns[35:39].values
-        for skill in skill_set:
-            tmp = st.checkbox(skill)
-            selected_skillsets.append(int(tmp))
+        with col3:
+            skill_set = df.columns[31:35].values
+            for skill in skill_set:
+                tmp = st.checkbox(skill)
+                selected_skillsets.append(int(tmp))
 
 
-    skills = ['Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
-            'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
-            'mongo', 'google_an']
+        with col4:
+            skill_set = df.columns[35:39].values
+            for skill in skill_set:
+                tmp = st.checkbox(skill)
+                selected_skillsets.append(int(tmp))
 
 
-    for i in range(len(skills)):
-        newRow[skills[i]] = selected_skillsets[i]
+        skills = ['Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
+                'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
+                'mongo', 'google_an']
+
+
+        for i in range(len(skills)):
+            newRow[skills[i]] = selected_skillsets[i]
 
 
 
-    X_modified = X_modified.append(newRow,ignore_index=True)
-    X_modified["Job Location"] = X_modified["Job Location"].astype("category")
-    X_modified["Industry"]=X_modified["Industry"].astype("category")
-    X_modified["Sector"] = X_modified["Sector"].astype("category")
-    X_modified["seniority_by_title"] = X_modified["seniority_by_title"].astype("category")
-    X_modified["Degree"] = X_modified["Degree"].astype("category")
-    X_modified["Size"] = X_modified["Size"].astype("category")
-    X_modified["Type of ownership"]=X_modified["Type of ownership"].astype("category")
+        X_modified = X_modified.append(newRow,ignore_index=True)
+        X_modified["Job Location"] = X_modified["Job Location"].astype("category")
+        X_modified["Industry"]=X_modified["Industry"].astype("category")
+        X_modified["Sector"] = X_modified["Sector"].astype("category")
+        X_modified["seniority_by_title"] = X_modified["seniority_by_title"].astype("category")
+        X_modified["Degree"] = X_modified["Degree"].astype("category")
+        X_modified["Size"] = X_modified["Size"].astype("category")
+        X_modified["Type of ownership"]=X_modified["Type of ownership"].astype("category")
 
-    X_modified["Job Location"] = X_modified["Job Location"].cat.codes
-    X_modified["Industry"] = X_modified["Industry"].cat.codes
-    X_modified["Sector"] = X_modified["Sector"].cat.codes
-    X_modified["seniority_by_title"] = X_modified["seniority_by_title"].cat.codes
-    X_modified["Degree"] = X_modified["Degree"].cat.codes
-    X_modified["Size"] = X_modified["Size"].cat.codes
-    X_modified["Type of ownership"] = X_modified["Type of ownership"].cat.codes
+        X_modified["Job Location"] = X_modified["Job Location"].cat.codes
+        X_modified["Industry"] = X_modified["Industry"].cat.codes
+        X_modified["Sector"] = X_modified["Sector"].cat.codes
+        X_modified["seniority_by_title"] = X_modified["seniority_by_title"].cat.codes
+        X_modified["Degree"] = X_modified["Degree"].cat.codes
+        X_modified["Size"] = X_modified["Size"].cat.codes
+        X_modified["Type of ownership"] = X_modified["Type of ownership"].cat.codes
 
-    new_row_encode = pd.DataFrame(X_modified.iloc[[-1]])
-    new_predicted = model.predict(new_row_encode)[0]
+        new_row_encode = pd.DataFrame(X_modified.iloc[[-1]])
+        new_predicted = model.predict(new_row_encode)[0]
 
-    predict_button = st.button("Get My Salary Prediction")
+        predict_button = st.form_submit_button("Get My Salary Prediction")
     if predict_button:
         st.write("Your expected salary is ",new_predicted,"K for a year!")
 
