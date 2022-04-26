@@ -1,16 +1,11 @@
-from turtle import color, title
-from matplotlib.pyplot import legend
-from sklearn.preprocessing import scale
 import streamlit as st
 import pandas as pd
 import altair as alt
 import numpy as np
 
 import xgboost as xgb
-# from xgboost import plot_tree
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
-# from matplotlib import pyplot
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import cross_val_score, KFold
 from sklearn.svm import SVR
@@ -115,7 +110,6 @@ compare_chart = alt.Chart(df_compare, title = state_option + " v.s. nationwide")
     width=300,
     height=300
 )
-# st.write(compare_chart)
 
 
 top_industry_salary_chart = alt.Chart(df[state_slices][:6],title="top 5 industry in "+state_option).mark_bar(color="#4D77FF").encode(
@@ -131,7 +125,6 @@ top_industry_salary_chart = alt.Chart(df[state_slices][:6],title="top 5 industry
     width=300,
     height=300
 )
-# st.write(top_industry_salary_chart)
 
 
 cols = st.columns(2)
@@ -150,8 +143,6 @@ rating_chart = alt.Chart(df[state_slices], title = "rating and salary in "+state
     alt.datum.Rating != -1
 ).interactive()
 
-# st.write(rating_chart)
-
 size_donut_chart = alt.Chart(df[state_slices],title = "company size in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
     theta=alt.Theta(field="Size",aggregate="count"),
     color=alt.Color(field="Size"),
@@ -168,7 +159,6 @@ ownership_donut_chart = alt.Chart(df[state_slices],title = "Amount of different 
     height=300
 )
 
-# st.altair_chart(size_donut_chart)
 st.altair_chart(ownership_donut_chart)
 
 cols = st.columns(2)
@@ -181,7 +171,6 @@ with cols[1]:
 st.header("What is the most important skill?")
 
 def Xgb_Regression():
-    # model = xgb.XGBRegressor()
     model = xgb.XGBRegressor(max_depth=7, eta=0.1,n_estimators=1000, learning_rate=0.1)
     return model
 def Svm_regression():
@@ -195,11 +184,7 @@ def pca_reduction(X):
     return X_new
 
 def train_model(x,y):
-    #print(x.head)
     model = Xgb_Regression()
-    #model = Svm_regression()
-    #print(x.shape)
-    #print(y.shape)
     xtrain, xtest, ytrain, ytest=train_test_split(x, y, test_size=0.1)
     model.fit(xtrain, ytrain)
 
@@ -210,16 +195,9 @@ def train_model(x,y):
 
 
 def feature_importance(model,x):
-    #feature importance
-    #print(model.feature_importances_)
-    #print(model.feature_importances_.T.shape)
-    # plot
-    # pyplot.bar(range(len(model.feature_importances_)), model.feature_importances_)
-    # pyplot.show()
     df = pd.DataFrame(model.feature_importances_,columns=['importance'])
     df['features'] = x.columns
     df.reindex(x.columns, axis=1)
-    #print(df)
     feature_chart = alt.Chart(df).mark_bar(color="#C0EDA6").encode(
       y=alt.Y('features',sort="-x"),
       x=alt.X('importance'),
@@ -257,13 +235,6 @@ def model_accuracy(model, xtrain, xtest, ytrain, ytest):
     st.altair_chart(predVSactual+line,use_container_width=True)
 
 def expand_data(df):
-    # size = []
-    # for (idx, row) in df.iterrows():
-    #     if '-' in row.loc['Size']:
-    #         size.append(row['size'].split(' - ')[1])
-    #     else:
-    #         size.append(row['size'])
-    # print(size)
     size = []
     for i in range(len(df)):
         if ' - ' in df.loc[i, "Size"]:
@@ -275,23 +246,16 @@ def expand_data(df):
             tmp = df.loc[i, "Size"].split('+')[0]
         else :
             tmp = df.loc[i, "Size"]
-        #print(tmp)
         if 'unknown' in tmp:
             size.append(1)
         else :
             size.append(int(tmp))
     df['new_size'] = size
-    #print(df['new_size'])
     df = df.loc[df.index.repeat(df.new_size)].reset_index(drop=True)
     return df
 
-#df = expand_data(df)
 Y = df.iloc[:,19]
-#print(Y.head)
-#print(df.shape)
 X = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
-#X = pd.concat([df.iloc[:,21],df.iloc[:,12]],axis = 1)
-#X = df.iloc[:,23:39]
 print(X.head)
 X["Job Location"] = X["Job Location"].astype("category")
 X["Industry"]=X["Industry"].astype("category")
@@ -315,12 +279,6 @@ feature_importance(model,X)
 model_accuracy(model, xtrain, xtest, ytrain, ytest)
 
 print(X.columns)
-#Index(['Rating', 'Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
-    #    'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
-    #    'mongo', 'google_an', 'Job Location', 'Size', 'Type of ownership',
-    #    'Industry', 'Sector', 'seniority_by_title', 'Degree'],
-    #   dtype='object')
-
 
 ##Make predictions based on selection
 
@@ -411,13 +369,6 @@ with col4:
 
 st.write("You selected:", selected_skillsets)
 
-
-#Index(['Rating', 'Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
-    #    'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
-    #    'mongo', 'google_an', 'Job Location', 'Size', 'Type of ownership',
-    #    'Industry', 'Sector', 'seniority_by_title', 'Degree'],
-    #   dtype='object')
-
 skills = ['Python', 'spark', 'aws', 'excel', 'sql', 'sas', 'keras',
         'pytorch', 'scikit', 'tensor', 'hadoop', 'tableau', 'bi', 'flink',
         'mongo', 'google_an']
@@ -451,19 +402,6 @@ new_predicted = model.predict(new_row_encode)[0]
 predict_button = st.button("Get My Salary Prediction:")
 if predict_button:
     st.write("Your expected salary is ",new_predicted,"K")
-
-# with col2:
-
-#     con = '<p style="font-family:sans-serif; color:Red; font-size: 42px;">Congratulation!</p>'
-#     st.markdown(con, unsafe_allow_html=True)
-#     #st.write("Congratulation!")
-#     st.write("You could make ")
-#     if predict:
-
-#         st.write("$1000000")
-#     else:
-#         st.write("_ _ _ _")
-#     st.write("a year!")
 
 
 
