@@ -13,7 +13,7 @@ from sklearn.decomposition import PCA
 from xgboost import XGBRegressor
 from vega_datasets import data
 
-
+st.set_page_config(layout="wide")
 @st.cache()
 def load_data(allow_output_mutation=True):
     data_path = "ds_data.csv"
@@ -54,7 +54,6 @@ def feature_importance(model,x):
     )
     st.write(feature_chart)
 
-
 def model_accuracy(model, xtrain, xtest, ytrain, ytest):
     #evaluate
     scores = cross_val_score(model, xtrain, ytrain,cv=5)
@@ -87,15 +86,13 @@ def model_accuracy(model, xtrain, xtest, ytrain, ytest):
 with st.sidebar:
     selected = option_menu(
         menu_title = "Data Scientist Career Accelerator",
-        options = ["Data Overview","Data Exploration", "Salary Prediction"],
+        options = ["Data Exploration", "Salary Prediction"],
         default_index=0,
         icons=["boxes","search","clipboard-data"],
         menu_icon="people",
     )
 
-if selected == "Data Overview":
-    st.title(f"You have selected {selected}")
-    st.write(df[:25])
+
     
 
 if selected =="Data Exploration":
@@ -386,7 +383,8 @@ if selected=="Salary Prediction":
     new_row_encode = pd.DataFrame(X_modified.iloc[[-1]])
     new_predicted = model.predict(new_row_encode)[0]
 
-    predict_button = st.button("Get My Salary Prediction:")
+    predict_button = st.button("Get My Salary Prediction")
     if predict_button:
-        st.write("Your expected salary is ",new_predicted,"K")
+        st.write("Your expected salary is ",new_predicted,"K for a year!")
+
 
