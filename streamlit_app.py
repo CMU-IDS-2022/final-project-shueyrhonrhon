@@ -183,7 +183,7 @@ if selected =="Data Exploration":
         y=alt.Y('binned:Q', stack=None),
         color="name",
     ).properties(
-        width=300,
+        width=700,
         height=300
     )
 
@@ -198,22 +198,19 @@ if selected =="Data Exploration":
             legend=None,
         ),
     ).properties(
-        width=300,
+        width=700,
         height=300
     )
 
 
-    cols = st.columns(2)
-    with cols[0]:
-        st.write(compare_chart)
-    with cols[1]:
-        st.write(top_industry_salary_chart)
+    st.write(compare_chart)
+    st.write(top_industry_salary_chart)
 
     rating_chart = alt.Chart(df[state_slices], title = "rating and salary in "+state_option).mark_point(tooltip=True,size=80).encode(
         x=alt.X("avgSalary",scale=alt.Scale(zero=False)),
         y=alt.Y("Rating",sort="-x"),
     ).properties(
-        width=300,
+        width=700,
         height=300
     ).transform_filter(
         alt.datum.Rating != -1
@@ -223,7 +220,7 @@ if selected =="Data Exploration":
         theta=alt.Theta(field="Size",aggregate="count"),
         color=alt.Color(field="Size"),
     ).properties(
-        width=300,
+        width=700,
         height=300
     )
 
@@ -237,11 +234,8 @@ if selected =="Data Exploration":
 
     st.altair_chart(ownership_donut_chart)
 
-    cols = st.columns(2)
-    with cols[0]:
-        st.write(rating_chart)
-    with cols[1]:
-        st.write(size_donut_chart)
+    st.write(rating_chart)
+    st.write(size_donut_chart)
 
 if selected=="Salary Prediction":
     with st.sidebar:
