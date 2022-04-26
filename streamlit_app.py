@@ -51,8 +51,10 @@ def feature_importance(model,x):
     feature_chart = alt.Chart(df).mark_bar(color="#C0EDA6").encode(
       y=alt.Y('features',sort="-x"),
       x=alt.X('importance'),
-    )
-    st.write(feature_chart)
+      color="importance",
+      tooltip = ['importance']
+    ).interactive()
+    st.altair_chart(feature_chart, use_container_width=True)
 
 def model_accuracy(model, xtrain, xtest, ytrain, ytest):
     #evaluate
@@ -276,53 +278,45 @@ if selected=="Salary Prediction":
         'Where do you want to be located?',
         (df['Job Location'].unique()))
 
-    st.write('You selected:', job_location_option)
     newRow['Job Location']=job_location_option
 
     industry_option = st.selectbox(
         'What industry you want to be in?',
         (df['Industry'].unique()))
 
-    st.write('You selected:', industry_option)
     newRow['Industry']=industry_option
 
     sector_option = st.selectbox(
         'What sector you want to be in?',
         (df['Sector'].unique()))
 
-    st.write('You selected:', sector_option)
     newRow['Sector']=sector_option
 
     size_option = st.selectbox(
         'What is your expected company size?',
         (df['Size'].unique()))
 
-    st.write('You selected:', size_option)
     newRow['Size']=size_option
 
     ownership_option = st.selectbox(
         'What is your expected type of ownership?',
         (df['Type of ownership'].unique()))
 
-    st.write('You selected:', ownership_option)
     newRow['Type of ownership']=ownership_option
 
     seniority_option = st.selectbox(
         'Are you looking forward to a senior role?',
         (df['seniority_by_title'].unique()))
 
-    st.write('You selected:', seniority_option)
     newRow['seniority_by_title']=seniority_option
 
     degree_option = st.selectbox(
         'What types of degree you acquired?',
         (df['Degree'].unique()))
 
-    st.write('You selected:', degree_option)
     newRow['Degree']=degree_option
 
     rating = st.slider('Your expected company rating?', -1, 4, 5)
-    st.write('You selected:', rating)
     newRow['Rating']=rating
 
     st.header("Check the skills you've acquired:")
