@@ -97,11 +97,11 @@ with st.sidebar:
     
 
 if selected =="Data Exploration":
-    st.title(f"You have selected {selected}")
+    st.title(f"{selected}")
     if st.checkbox("Show raw data"):
         st.write(df[:25])
 
-    st.header("The salary map of Data Scientist in the US")
+    st.header("🗺️ The salary map of Data Scientist in the US")
 
     counties = alt.topo_feature(data.us_10m.url, 'counties')
     source = data.unemployment.url
@@ -142,7 +142,7 @@ if selected =="Data Exploration":
     st.write(background + map_salary)
 
 
-    st.header("Select the states you want to know about:")
+    st.header("❓ Select the states you want to know about:")
     values = df['Job Location'].unique().tolist()
     default_ix = values.index('CA')
     state_option = st.selectbox(
@@ -172,7 +172,7 @@ if selected =="Data Exploration":
 
     df_compare = nation_count.append(state_count, ignore_index=True)
 
-    compare_chart = alt.Chart(df_compare, title = state_option + " v.s. nationwide").mark_bar(opacity=1.0).encode(
+    compare_chart = alt.Chart(df_compare, title = "salary distribution " + state_option + " v.s. nationwide").mark_bar(opacity=1.0).encode(
         x=alt.X('index', sort=category),
         y=alt.Y('binned:Q', stack=None),
         color="name",
@@ -200,7 +200,7 @@ if selected =="Data Exploration":
     st.write(compare_chart)
     st.write(top_industry_salary_chart)
 
-    rating_chart = alt.Chart(df[state_slices], title = "rating and salary in "+state_option).mark_point(tooltip=True,size=80).encode(
+    rating_chart = alt.Chart(df[state_slices], title = "company rating and salary in "+state_option).mark_point(tooltip=True,size=80).encode(
         x=alt.X("avgSalary",scale=alt.Scale(zero=False)),
         y=alt.Y("Rating",sort="-x"),
     ).properties(
@@ -218,7 +218,7 @@ if selected =="Data Exploration":
         height=300
     )
 
-    ownership_donut_chart = alt.Chart(df[state_slices],title = "Amount of different ownership companies in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
+    ownership_donut_chart = alt.Chart(df[state_slices],title = "company ownership in "+state_option).mark_arc(innerRadius=50,tooltip=True).encode(
         theta=alt.Theta(field="Type of ownership",aggregate='count'),
         color=alt.Color(field="Type of ownership"),
     ).properties(
@@ -233,8 +233,9 @@ if selected =="Data Exploration":
 
 if selected=="Salary Prediction":
     with st.sidebar:
-        st.header("This code will be printed to the sidebar.")
-    st.title(f"You have selected {selected}")
+        st.header("")
+        # st.header("This code will be printed to the sidebar.")
+    st.title(f"{selected}")
     st.header("\U0001F914 What is the most important feature for salary increase?")
     Y = df.iloc[:,19]
     X = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
