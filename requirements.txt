@@ -6,3 +6,4 @@ numpy
 pycountry_convert
 sklearn
 xgboost
+streamlit_option_menu
