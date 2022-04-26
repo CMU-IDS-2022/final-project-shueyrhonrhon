@@ -235,7 +235,7 @@ if selected=="Salary Prediction":
     with st.sidebar:
         st.header("This code will be printed to the sidebar.")
     st.title(f"You have selected {selected}")
-    st.header("What is the most important feature for salary increase?")
+    st.header("\U0001F914 What is the most important feature for salary increase?")
     Y = df.iloc[:,19]
     X = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
     print(X.head)
@@ -258,6 +258,7 @@ if selected=="Salary Prediction":
 
     model, xtrain, xtest, ytrain, ytest  = train_model(X,Y)
     feature_importance(model,X)
+    st.header("\U0001F916 Model Accuracy on Test Dataset")
     model_accuracy(model, xtrain, xtest, ytrain, ytest)
 
     print(X.columns)
