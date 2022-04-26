@@ -226,10 +226,10 @@ if selected =="Data Exploration":
         height=300
     )
 
-    st.altair_chart(ownership_donut_chart)
-
     st.write(rating_chart)
+    
     st.write(size_donut_chart)
+    st.altair_chart(ownership_donut_chart)
 
 if selected=="Salary Prediction":
     with st.sidebar:
