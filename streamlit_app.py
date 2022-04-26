@@ -92,8 +92,13 @@ with st.sidebar:
         default_index=0,
         icons=["boxes","search","clipboard-data"],
         menu_icon="people",
+        styles={
+        "container": {"padding": "0!important", "background-color": "#fafafa"},
+        "icon": {"color": "orange", "font-size": "25px"}, 
+        "nav-link": {"font-size": "25px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
+        "nav-link-selected": {"background-color": "CornflowerBlue"},
+    }
     )
-
 
     
 
@@ -239,6 +244,8 @@ if selected =="Data Exploration":
         st.write(size_donut_chart)
 
 if selected=="Salary Prediction":
+    with st.sidebar:
+        st.header("This code will be printed to the sidebar.")
     st.title(f"You have selected {selected}")
     st.header("What is the most important feature for salary increase?")
     Y = df.iloc[:,19]
