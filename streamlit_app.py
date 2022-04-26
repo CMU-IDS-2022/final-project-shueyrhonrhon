@@ -11,7 +11,6 @@ from sklearn.svm import SVR
 from sklearn.decomposition import PCA
 from xgboost import XGBRegressor
 from vega_datasets import data
-
 st.set_page_config(layout="wide")
 @st.cache()
 def load_data(allow_output_mutation=True):
@@ -84,19 +83,15 @@ def model_accuracy(model, xtrain, xtest, ytrain, ytest):
     )
     st.altair_chart(predVSactual+line,use_container_width=True)
 
+st.sidebar.image("images/logo.png", use_column_width=True)
 with st.sidebar:
     selected = option_menu(
-        menu_title = "Data Scientist Career Accelerator",
+        menu_title = "",
         options = ["Data Exploration", "Salary Prediction"],
         default_index=0,
         icons=["boxes","search","clipboard-data"],
-        menu_icon="people",
-        styles={
-        "container": {"padding": "0!important", "background-color": "#fafafa"},
-        "icon": {"color": "orange", "font-size": "25px"}, 
-        "nav-link": {"font-size": "25px", "text-align": "left", "margin":"0px", "--hover-color": "#eee"},
-        "nav-link-selected": {"background-color": "CornflowerBlue"},
-    }
+        
+    
     )
 
     
@@ -269,7 +264,7 @@ if selected=="Salary Prediction":
 
     ##Make predictions based on selection
 
-    st.header("Predict your expected salary!")
+    st.header("\U0001F606 Predict your expected salary!")
 
     X_modified = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
     newRow = {i:0 for i in X.columns}
