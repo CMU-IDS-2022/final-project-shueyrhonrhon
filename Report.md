@@ -23,7 +23,7 @@ Inspired by the above work, we believe that there are plenty of chances to get a
 
 An explanation of the techniques and algorithms you used or developed.
 
-# Data Exploration
+### Data Exploration
 In this part, we use various interactive visualization techniques to allow users to freely explore the data and gain insights in the process. First, to give an overview of the geographical distribution of the salary of data scientists, we use a map of the US where the color encodes the average salary of each state. The interactive tooltips let users further explore detailed numbers. The map allows users to quickly get to know which locations offer data scientists jobs with higher pay. Second, for each specific state, we allow users to explore more details about the data slice. Users can select a state that they are interested in. And several visualizations will be generated to help them know about the job market in the state, including: 
 1. A bar chart comparing the nationwide salary distribution and state salary distribution. It intuitively shows how many job opportunities exist for each pay range. And users can get a sense of how high the pay is generally in the state compared with the whole US.
 2. A bar chart showing the top 5 industries that offer the highest average salary for data scientists. Users can use this chart to identify which industries they can work for in order to get a higher salary.
