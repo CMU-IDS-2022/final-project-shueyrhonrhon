@@ -10,7 +10,7 @@
 
 ## Work distribution
 
-Update towards the end of the project.
+* Nora(Yining) Wang: Brainstorming salary prediction features; Website user interface design(side bar navigation); The overall implementation of the prediction part; The interactive designs for the feature importance, and model accuracy charts.
 
 ## Deliverables
 
