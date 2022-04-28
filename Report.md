@@ -42,14 +42,14 @@ In the implementation of this part, we use techniques such as:
 Our salary prediction feature is aimed to help applicants address two problems in real life. The first problem is career exploration: we aim to help college students who are looking for an internship / entry-level job as a data scientists choose their future career, by showing them the expected salary through our machine learning model. The second problem is interview preparation: “What is your expected salary” is a common question that interviewer asks, however, it is hard for an unexperienced college students to answer this question. Through our prediction feature, users could have a general sense on the expected salary of people who have similar backgrounds. 
 Specifically, here are the options for users to choose :
 
-***Location***: users are allowed to choose from all states in the United States.
-***Industry***: Industry like IT industry, Pharmaceutical industry etc
-***Sector***: Sector in which company works
-***Company Size***: Range of number of employee working in the company
-***Type of Ownership***: if the company is private, public or government owned
-***Seniority***: Seniority in title, users are able to see the growth path of the job.
-***Degree***: Master, or Phds. 
-***Rating***: The corresponding rating of the company. 
+* ***Location***: users are allowed to choose from all states in the United States.
+* ***Industry***: Industry like IT industry, Pharmaceutical industry etc
+* ***Sector***: Sector in which company works
+* ***Company Size***: Range of number of employee working in the company
+* ***Type of Ownership***: if the company is private, public or government owned
+* ***Seniority***: Seniority in title, users are able to see the growth path of the job.
+* ***Degree***: Master, or Phds. 
+* ***Rating***: The corresponding rating of the company. 
 
 
 ## Discussion
@@ -60,7 +60,7 @@ Currently, we only have no more than 800 pieces of data from glassdoor. These da
 
 On the other hand, we provide limited functions for our users. Currently, we can only predict salary based on the users' choices based on 9 choices, like location, industry, and sector. We hope that in the future we can provide more choices like no-tech skills that users possess, the number of years he/she has worked and their previous salary. These data will be collected in the future to further train our machine learning model so that we can give a more precise prediction. 
 
-***For our models specifically: ***
+For our models specifically:
 * Model Accuracy:  In order to increase the accuracy of model, more features and training data in longer time series are required. For example, for the degree option, the current didn’t include options for high school and bachelor’s degrees. 
 
 * Model Interpretation: We use Xgboost to train our model,  although it have significant higher accuracy than others, it is not a very interpretable model. It will have two main drawbacks: 1. the overall user experience will be reduced because we cannot directly tell them how to improve the objective, instead, they have to see the difference trying different options by themselves. 2. It lowers the credibility of our model. However, we believe if the training size could be increase, we will shift to other more interpretable models with acceptable accuracy levels.
