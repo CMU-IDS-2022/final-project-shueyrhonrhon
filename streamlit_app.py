@@ -12,6 +12,11 @@ from sklearn.decomposition import PCA
 from xgboost import XGBRegressor
 from vega_datasets import data
 st.set_page_config(layout="wide")
+
+st.markdown(""" <style> .font {
+font-size:50px ; font-family: 'Cooper Black'; color: #FF9633;} 
+</style> """, unsafe_allow_html=True)
+
 @st.cache()
 def load_data(allow_output_mutation=True):
     data_path = "ds_data.csv"
@@ -271,6 +276,7 @@ if selected=="Salary Prediction":
     X_modified = pd.concat([df.iloc[:,4],df.iloc[:,23:39],df.iloc[:,21],df.iloc[:,8],df.iloc[:,10],df.iloc[:,11],df.iloc[:,12],df.iloc[:,40:42]],axis = 1)
     newRow = {i:0 for i in X.columns}
 
+
     with st.form("my_form"):
         job_location_option = st.selectbox(
             'Where do you want to be located?',
@@ -278,21 +284,28 @@ if selected=="Salary Prediction":
 
         newRow['Job Location']=job_location_option
 
+        industry_list = list(df['Industry'].unique())
+        industry_list.remove("-1")
         industry_option = st.selectbox(
             'What industry you want to be in?',
-            (df['Industry'].unique()))
+            (industry_list))
 
         newRow['Industry']=industry_option
 
+
+        sector_list = list(df['Sector'].unique())
+        sector_list.remove("-1")
         sector_option = st.selectbox(
             'What sector you want to be in?',
-            (df['Sector'].unique()))
+            (sector_list))
 
         newRow['Sector']=sector_option
 
+        size_list = ['1 - 50', '51 - 200 ', '201 - 500 ', '501 - 1000 ', '1001 - 5000 ', '5001 - 10000 ', '10000+ ']
+        print(size_list)
         size_option = st.selectbox(
             'What is your expected company size?',
-            (df['Size'].unique()))
+            (size_list))
 
         newRow['Size']=size_option
 
@@ -302,14 +315,16 @@ if selected=="Salary Prediction":
 
         newRow['Type of ownership']=ownership_option
 
+        seniority_list=list(df['seniority_by_title'].unique())
+        seniority_list.remove("na")
         seniority_option = st.selectbox(
-            'Are you looking forward to a senior role?',
-            (df['seniority_by_title'].unique()))
+            "I'm looking for a junior(jr) or senior(sr) role: ",
+            (seniority_list))
 
         newRow['seniority_by_title']=seniority_option
 
         degree_option = st.selectbox(
-            'What types of degree you acquired?',
+            'What type of degree you acquired? \n M = Master, P = Phd , na = else',
             (df['Degree'].unique()))
 
         newRow['Degree']=degree_option
@@ -380,6 +395,7 @@ if selected=="Salary Prediction":
 
         predict_button = st.form_submit_button("Get My Salary Prediction")
     if predict_button:
-        st.write("Your expected salary is ",new_predicted,"K for a year!")
+        st.write("Your expected salary is ",new_predicted,"K dollars for a year!")
+
 
 
