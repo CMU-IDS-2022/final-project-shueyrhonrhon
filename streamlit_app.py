@@ -169,7 +169,7 @@ if selected =="Data Exploration":
     category = ['0-50K', '50K-100K', '100K-150K', '150K-200K', '200K-250K', '250K-300K']
     nationwide['binned']=pd.cut(x=nationwide['avgSalary'], bins=[0,50,100,150,200, 250, 300], labels=category)
     nation_count = pd.value_counts(nationwide['binned']).reset_index()
-    nation_count['name'] = 'nationwide salary'
+    nation_count['name'] = 'US salary'
     state['binned']=pd.cut(x=state['avgSalary'], bins=[0,50,100,150,200, 250, 300], labels=category)
     state_count = pd.value_counts(state['binned']).reset_index()
     state_count['name'] = state_option + ' salary'
@@ -177,7 +177,7 @@ if selected =="Data Exploration":
 
     df_compare = nation_count.append(state_count, ignore_index=True)
 
-    compare_chart = alt.Chart(df_compare, title = "salary distribution " + state_option + " v.s. nationwide").mark_bar(opacity=1.0).encode(
+    compare_chart = alt.Chart(df_compare, title = "salary distribution " + state_option + " v.s. US").mark_bar(opacity=1.0).encode(
         x=alt.X('index', sort=category),
         y=alt.Y('binned:Q', stack=None),
         color="name",
