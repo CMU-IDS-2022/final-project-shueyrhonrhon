@@ -21,6 +21,22 @@ Inspired by the above work, we believe that there are plenty of chances to get a
 
 ## Methods
 
+An explanation of the techniques and algorithms you used or developed.
+
+### Data Exploration
+In this part, we use various interactive visualization techniques to allow users to freely explore the data and gain insights in the process. First, to give an overview of the geographical distribution of the salary of data scientists, we use a map of the US where the color encodes the average salary of each state. The interactive tooltips let users further explore detailed numbers. The map allows users to quickly get to know which locations offer data scientists jobs with higher pay. Second, for each specific state, we allow users to explore more details about the data slice. Users can select a state that they are interested in. And several visualizations will be generated to help them know about the job market in the state, including: 
+1. A bar chart comparing the nationwide salary distribution and state salary distribution. It intuitively shows how many job opportunities exist for each pay range. And users can get a sense of how high the pay is generally in the state compared with the whole US.
+2. A bar chart showing the top 5 industries that offer the highest average salary for data scientists. Users can use this chart to identify which industries they can work for in order to get a higher salary.
+3. A scatter plot showing the distribution of company rating and salary. Users can get an overview of the data points regarding company ratings and salary.
+4. Two pie charts showing the composition of company size and company ownership. Users can learn about what kind of companies are offering data scientist jobs in this state.
+
+In the implementation of this part, we use techniques such as:
+1. Color encoding. The map uses color encoding to present salary information intuitively.
+2. Contrast. The bar chart contrasts state data with national data so users can have a better baseline reference.
+3. Multi-view coordination. When users choose a state, multiple charts update to visualize the data slice.
+4. Details on demand. When users hover their mouse over the chart, tooltips help users get to know more information.
+
+
 ## Results
 
 ## Discussion
