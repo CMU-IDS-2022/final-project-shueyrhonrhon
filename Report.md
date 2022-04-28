@@ -1,6 +1,7 @@
 # Final Project Report
 
 **Project URL**: https://share.streamlit.io/cmu-ids-2022/final-project-shueyrhonrhon/main
+***Note: our salary predictions features runs slowly on this link, please run this project locally to use this feature.***
 
 **Video URL**: TODO
 
