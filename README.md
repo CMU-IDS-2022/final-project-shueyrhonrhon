@@ -1,6 +1,6 @@
 # CMU Interactive Data Science Final Project
 
-* **Online URL**: https://share.streamlit.io/cmu-ids-2022/final-project-shueyrhonrhon/main \n
+* **Online URL**: https://share.streamlit.io/cmu-ids-2022/final-project-shueyrhonrhon/main <br>
 ***Note: our salary predictions features runs slowly on this link, please run this project locally to use this feature.***
 * **Team members**:
   * Contact person: jiaxianw@andrew.cmu.edu
