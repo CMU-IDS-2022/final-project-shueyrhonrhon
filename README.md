@@ -1,6 +1,6 @@
 # CMU Interactive Data Science Final Project
 
-* **Online URL**: TODO
+* **Online URL**: https://share.streamlit.io/yellowlattice/final-project-shueyrhonrhon/main
 * **Team members**:
   * Contact person: jiaxianw@andrew.cmu.edu
   * zhiyili@andrew.cmu.edu
