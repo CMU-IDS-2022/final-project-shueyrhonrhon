@@ -39,12 +39,34 @@ In the implementation of this part, we use techniques such as:
 
 ## Results
 
+Our salary prediction feature is aimed to help applicants address two problems in real life. The first problem is career exploration: we aim to help college students who are looking for an internship / entry-level job as a data scientists choose their future career, by showing them the expected salary through our machine learning model. The second problem is interview preparation: “What is your expected salary” is a common question that interviewer asks, however, it is hard for an unexperienced college students to answer this question. Through our prediction feature, users could have a general sense on the expected salary of people who have similar backgrounds. 
+Specifically, here are the options for users to choose :
+
+***Location***: users are allowed to choose from all states in the United States.
+***Industry***: Industry like IT industry, Pharmaceutical industry etc
+***Sector***: Sector in which company works
+***Company Size***: Range of number of employee working in the company
+***Type of Ownership***: if the company is private, public or government owned
+***Seniority***: Seniority in title, users are able to see the growth path of the job.
+***Degree***: Master, or Phds. 
+***Rating***: The corresponding rating of the company. 
+
+
 ## Discussion
+
 
 ## Future Work
 Currently, we only have no more than 800 pieces of data from glassdoor. These data can not represent the salary distribution across the US, not to mention the world. We hope that we can get more data from other resources like Linkedin, Indeed, and other applications from other countries. We believe that our application can be more persuasive with more data. Also, we don't provide all the summarized information for our users. For example, the degree requirement can not be visualized because we have too many 'na' in our data. We believe that we can provide more summarized information with more data, which will give our users a more clear vision of the salaries of Data scientists.
 
 On the other hand, we provide limited functions for our users. Currently, we can only predict salary based on the users' choices based on 9 choices, like location, industry, and sector. We hope that in the future we can provide more choices like no-tech skills that users possess, the number of years he/she has worked and their previous salary. These data will be collected in the future to further train our machine learning model so that we can give a more precise prediction. 
+
+***For our models specifically: ***
+* Model Accuracy:  In order to increase the accuracy of model, more features and training data in longer time series are required. For example, for the degree option, the current didn’t include options for high school and bachelor’s degrees. 
+
+* Model Interpretation: We use Xgboost to train our model,  although it have significant higher accuracy than others, it is not a very interpretable model. It will have two main drawbacks: 1. the overall user experience will be reduced because we cannot directly tell them how to improve the objective, instead, they have to see the difference trying different options by themselves. 2. It lowers the credibility of our model. However, we believe if the training size could be increase, we will shift to other more interpretable models with acceptable accuracy levels.
+
+* Intrinsic Bias: Since our data were scrapped from the job posting in Glassdoor, it contains the bias that the real working environment != to the job descriptions. For example, the hiring manager wrote the role require MBAs degree, but in real scenario, a undergraduate or master students could still get the job, as long as they obtain the required abilities; The expected salary could be varies to each person working in this role, because there will be a threshold for negotiation. To improve the performance of our model, we need to sample more data from the real working environment. 
+
 
 ## Reference
 [1] Situ, W., Zheng, L., Yu, X., & Daneshmand, M. (2017). Predicting the probability and salary to get data science job in top companies. IIE Annual Conference.Proceedings, , 933-939.
