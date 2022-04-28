@@ -1,6 +1,6 @@
 # Final Project Report
 
-**Project URL**: https://share.streamlit.io/yellowlattice/final-project-shueyrhonrhon/main
+**Project URL**: https://share.streamlit.io/cmu-ids-2022/final-project-shueyrhonrhon/main
 
 **Video URL**: TODO
 
