@@ -37,6 +37,29 @@ In the implementation of this part, we use techniques such as:
 3. Multi-view coordination. When users choose a state, multiple charts update to visualize the data slice.
 4. Details on demand. When users hover their mouse over the chart, tooltips help users get to know more information.
 
+### Salary Prediction
+In this part, we experimented with various machine learning models to find the one with best performance. 
+#### XGBoost
+XGBoost, short for extreme gradient boosting, is an implementation of gradient boosted decision trees designed for speed and performance by Tianqi Chen [3.1]. XGBoost adds a regular term to control the complexity of the model, which helps to prevent over fitting and improve the generalization ability of the model. It uses the second-order Taylor expansion to find the optimal solution. The XGBoost model in this paper is implemented by the xgbregressor() function in Python's xgboost library, with a max depth of 7 and a learning rate of 0.1. 
+
+This algorithm has recently been dominating applied machine learning and Kaggle competitions. Not surprisingly, it achieved the best performance among the machine learning models we have experimented with, with a mean cross validation score 0.2 higher than the others. Thus, we decided to use a trained XGBoost regressor as our model. 
+
+#### Random Forest
+Random forest regressor refers to a model that uses multiple decision trees to train and predict samples. The method was first proposed by Leo Breiman and Adele Cutler [3.2], generally thought as an embodiment of bagging in ensemble learning. Bagging is a representative method of parallel integrated learning method based on bootstrap sampling. Given a standard data set t of size n, bagging randomly and evenly samples m rounds from t to get m sample sets into the sampling set, and then puts the samples back into the initial data set. By replacing sampling, some results can be observed repeatedly in each subset, and some samples in the initial training set will never appear in the sampling set, These unseen samples can be used as validation sets to estimate the subsequent generalization performance. Based on each sampling set, a base learner can be trained, and then the results of all base learners can be integrated. Usually, the results of regression tasks are combined with simple averaging method. 
+
+In random forest, the decision tree is the base learner for training based on bagging algorithm. On this basis, the method also introduces the selection of random features in the training process of the decision tree. For each node of the base decision tree, a subset containing some features will be randomly selected from the feature set of the node, and then an optimal feature will be selected from this subset for division. Therefore, the basic learning machine of random forest has disturbances from samples and characteristics. This diversity further enhances the generalization ability of the final method integration. The random forest model in this project is implemented by Python's kneighborsregressor() function. However, it failed to achieve the optimal performance therefore was not selected in the final code of our project.
+
+#### K Nearest Neighbor (KNN)
+KNN was first proposed by Cover and Hart in 1968 [3.3]. Among all machine learning methods, the core idea of KNN is the most intuitive, it uses feature similarity to predict the values of any new data points. This means that the new point is assigned a value based on how closely it resembles the points in the training set. The average of these data points is the final prediction for the new point. 
+
+The algorithm steps are as follows: firstly, according to the given distance measurement method (Euclidean distance is used in this project), find the K sample points closest to the sample points in the training set. Then, the category of sample points is determined according to the average value in this group. For the value of K, there is no fixed formula, and the most suitable number of samples needs to be found through parameter tuning experiment. Generally speaking, the decrease of K value will make the overall model more complex and prone to over fitting; The K value increases, that is, the neighborhood of the training sample is expanded. Although the training error will increase, the generalization performance will be improved. KNN algorithm is fast and can undertake the regression task of data with large sample size. However, it was not preferrable for our project as we only have hundreds of samples in our dataset, and the performance was not satisfying. Thus, we eventually rule this method out of our project implementation.
+
+#### Feature Importance
+From the section mentioned above, we eventually selected a trained and tuned XGBoost Regressor as our final model. A benefit of using this kind of gradient boosting method is that after the boosted trees are constructed, it is relatively straightforward to retrieve importance scores for each attribute.
+
+Feature importance provides a score that indicates how useful or valuable each feature was in the construction of the boosted decision trees within the model. The more an attribute is used to make key decisions with decision trees, the higher its relative importance.This importance is calculated explicitly for each attribute in the dataset, allowing attributes to be ranked and compared to each other. It is measured by the amount that each attribute split point improves the performance measure, weighted by the number of observations the node is responsible for, then averaged across all of the the decision trees within the model[3.4].
+
+A trained XGBoost model could automatically calculates feature importance on the training dataset. These importance scores are available in the feature_importances_ member variable of the trained model. The scores could then be ranked and presented to users as a bar chart.
 
 ## Results
 
@@ -54,7 +77,10 @@ Specifically, here are the options for users to choose :
 
 
 ## Discussion
-
+There are some interesting insights we could conclude from the salary prediction model.
+1. No strong correlation exists between the 16 skills (Python, Spark, etc.) and the income salary alone. The mean cross-validation score for machine learning model could only reach 0.3 when only these 16 features are considered. 
+2. Besides Python, which is probably the most important and popular skills in the world of data science, we found out the Google Analytics (A web analytics service that provides statistics and basic analytical tools for search engine optimization and marketing purposes[3.5]) and SAS (A command-driven software package used for statistical analysis and data visualization[3.6]) also play an important role in data scientists salary. This reminds future data scientists to expand and update their skill sets to meet job market demand.
+3. Industrial differences exists when it comes to data scientists' salary. Although having similar job description and same job title, some industries such as business, IT and retail could pay much more than other industries. 
 
 ## Future Work
 Currently, we only have no more than 800 pieces of data from glassdoor. These data can not represent the salary distribution across the US, not to mention the world. We hope that we can get more data from other resources like Linkedin, Indeed, and other applications from other countries. We believe that our application can be more persuasive with more data. Also, we don't provide all the summarized information for our users. For example, the degree requirement can not be visualized because we have too many 'na' in our data. We believe that we can provide more summarized information with more data, which will give our users a more clear vision of the salaries of Data scientists.
@@ -73,3 +99,18 @@ For our models specifically:
 [1] Situ, W., Zheng, L., Yu, X., & Daneshmand, M. (2017). Predicting the probability and salary to get data science job in top companies. IIE Annual Conference.Proceedings, , 933-939.
 
 [2] King, J., & Magoulas, R. (2015). 2015 data science salary survey. O'Reilly Media, Incorporated.
+
+
+3.1Chen, T., & Guestrin, C. (2016, August). Xgboost: A scalable tree boosting system. In *Proceedings of the 22nd acm sigkdd international conference on knowledge discovery and data mining* (pp. 785-794).
+
+3.2Breiman, L. (2001). Random forests. *Machine learning*, *45*(1), 5-32.
+
+3.3*K-Nearest Neighbors Algorithm: KNN Regression Python*. Analytics Vidhya. (2020, May 25). Retrieved April 28, 2022, from https://www.analyticsvidhya.com/blog/2018/08/k-nearest-neighbor-introduction-regression-python/ 
+
+3.4Brownlee, J. (2020, August 27). *Feature importance and feature selection with XGBoost in python*. Machine Learning Mastery. Retrieved April 28, 2022, from https://machinelearningmastery.com/feature-importance-and-feature-selection-with-xgboost-in-python/ 
+
+3.5Chai, W., & Contributor, T. T. (2021, April 12). *What is google analytics and how does it work?* SearchBusinessAnalytics. Retrieved April 28, 2022, from https://www.techtarget.com/searchbusinessanalytics/definition/Google-Analytics#:~:text=Google%20Analytics%20is%20a%20web,anyone%20with%20a%20Google%20account. 
+
+
+
+3.6*Statistical & Qualitative Data Analysis Software: ABOUT SAS*. LibGuides. (n.d.). Retrieved April 28, 2022, from https://libguides.library.kent.edu/statconsulting/SAS 
