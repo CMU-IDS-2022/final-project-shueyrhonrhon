@@ -64,6 +64,8 @@ A trained XGBoost model could automatically calculates feature importance on the
 
 ## Results
 
+The data exploration part is aimed for users to gain an overview of the distribution of average salary around the United States. In this process, users can figure out what are the potential locations they want to work at in the future. Users can then select the state they are interested in to get more details from a set of generated plots. Users can see how many jobs there are for each salary range. Users can see what kind of industries there exist that offer well-paid job opportunities and whether it aligns with their interest and past experience. Users can also see the composition of company ratings, sizes and ownerships. After the data exploration, users will identify several potential locations and industries and proceed to the salary prediction part.
+
 Our salary prediction feature is aimed to help applicants address two problems in real life. The first problem is career exploration: we aim to help college students who are looking for an internship / entry-level job as a data scientists choose their future career, by showing them the expected salary through our machine learning model. The second problem is interview preparation: “What is your expected salary” is a common question that interviewer asks, however, it is hard for an unexperienced college students to answer this question. Through our prediction feature, users could have a general sense on the expected salary of people who have similar backgrounds. 
 Specifically, here are the options for users to choose :
 
