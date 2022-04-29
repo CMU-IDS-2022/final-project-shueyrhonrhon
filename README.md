@@ -11,6 +11,7 @@
 ## Work distribution
 
 * **Nora(Yining) Wang**: Brainstorming salary prediction features; Website user interface design(side bar navigation); The overall implementation of the prediction part; The interactive designs for the feature importance, and model accuracy charts.
+* **Jiaxiang Wu**: Plot multiple charts in the application; write the introduction, related work and future work part.
 
 ## Deliverables
 
