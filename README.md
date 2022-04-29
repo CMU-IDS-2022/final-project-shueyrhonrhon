@@ -12,6 +12,7 @@
 
 * **Nora(Yining) Wang**: Brainstorming salary prediction features; Website user interface design(side bar navigation); The overall implementation of the prediction part; The interactive designs for the feature importance, and model accuracy charts.
 * **Jiaxiang Wu**: Plot multiple charts in the application; write the introduction, related work and future work part.
+* **Zhiyi Li**: Machine learning model training and evaluation; The method and discussion part of salary prediction in the report.
 
 ## Deliverables
 
