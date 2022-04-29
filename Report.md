@@ -77,6 +77,12 @@ Specifically, here are the options for users to choose :
 
 
 ## Discussion
+From the data exploration part, we can gain some insights on the distribution of average salary. From the map we can see that California and Illinois have the highest average salaries in the US. It makes sense because there are lots of data scientists working in technology industries in California and technology companies often offer higher pay. And for Illinois, there are lots of Fintech companies in Chicago that offer top salaries to data scientists to research on trading strategies. We can also see that a lot of states in the middle west do not have any samples of data scientists jobs because of the scarcity.
+
+We also select specific states to create a case study.
+1. California. We can see from the stacked bar plot that California offers more well paid job opportunities than the national average. The top industries are mostly IT and software related. And most companies are middle-sized private companies.
+2. Texas. Salaries of job offers in Texas are average. The top industries are mostly traditional industries. And most companies are big private companies.
+
 There are some interesting insights we could conclude from the salary prediction model.
 1. No strong correlation exists between the 16 skills (Python, Spark, etc.) and the income salary alone. The mean cross-validation score for machine learning model could only reach 0.3 when only these 16 features are considered. 
 2. Besides Python, which is probably the most important and popular skills in the world of data science, we found out the Google Analytics (A web analytics service that provides statistics and basic analytical tools for search engine optimization and marketing purposes[3.5]) and SAS (A command-driven software package used for statistical analysis and data visualization[3.6]) also play an important role in data scientists salary. This reminds future data scientists to expand and update their skill sets to meet job market demand.
