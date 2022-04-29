@@ -3,7 +3,7 @@
 **Project URL**: https://share.streamlit.io/cmu-ids-2022/final-project-shueyrhonrhon/main
 ***Note: our salary predictions features runs slowly on this link, please run this project locally to use this feature.***
 
-**Video URL**: TODO
+**Video URL**: On Canvas
 
 ## Introduction
 Data Scientist is one of the most popular jobs in the United States. According to Harvard Business Review, Data Scientist is the sexist job of the 21st Century. On February 2, 2022, recruiting website Glassdoor released its annual ranking of the “50 Best Jobs in America for 2022”, and Data Scientist is the #3 Best Job in America, with a Median Base Salary of $120,000. In the Carnegie Mellon community, we also have met many people who are preparing for or curious about being a Data Scientist after graduating. However, some of them are still confusing what skills they need to have in order to get an ideal salary in the future. In this project, we want to present a clear picture of the salary distribution in the United States, provide guidelines to the Data Scientist applicants, and help them land a satisfying job. This project will give users a brief sense of what kind of skills they need to possess or know about. Users like students in Carnegie Mellon can register for courses for skills they want to possess.
