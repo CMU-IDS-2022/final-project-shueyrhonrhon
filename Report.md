@@ -32,10 +32,11 @@ In this part, we use various interactive visualization techniques to allow users
 4. Two pie charts showing the composition of company size and company ownership. Users can learn about what kind of companies are offering data scientist jobs in this state.
 
 In the implementation of this part, we use techniques such as:
-1. Color encoding. The map uses color encoding to present salary information intuitively.
-2. Contrast. The bar chart contrasts state data with national data so users can have a better baseline reference.
-3. Multi-view coordination. When users choose a state, multiple charts update to visualize the data slice.
-4. Details on demand. When users hover their mouse over the chart, tooltips help users get to know more information.
+1. Color encoding. A sequential color palette is composed of varying intensities of a single hue of color at uniform saturation. Variability in luminance of adjacent colors corresponds to the variation in data values that they are used to render. The map uses a sequential color palette to encode the value of average data scientist jobs in each state. It is intuitive and easy for readers to gain a general view of the distribution.
+2. Compare and contrast. Contrast graphics communicate two concepts or datasets side-by-side. This data visualization technique when you want the readers to gain information from the comparison. In our case, we want the readers to have a baseline to refer to when they look at the distribution of state salary. The bar chart contrasts state data with national data by stacking bars of different colors so users can have a better baseline reference.
+3. Multi-view coordination. Interactive visualization allows users to freely explore the dataset. In this process, there are many pieces of information we want to present as multiple views to users. However, such views are not isolated and separated but rather in a close-tied relationship. In our implementation, when users choose a state, multiple charts update to visualize the data slice.
+4. Details on demand. Sometimes users want to dive deep and get more details in the data they are interested in. However, presenting all the details statically will result in the view being too crowded with information, and making it hard to generate a general view and identify patterns. In the interactive form, we can offer details when users interact and request for them. In our implementation, when users hover their mouse over the chart, tooltips help users get to know more information.
+
 
 ### Salary Prediction
 In this part, we experimented with various machine learning models to find the one with best performance. 
